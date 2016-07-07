@@ -1,0 +1,6 @@
+delete from Person where Id not in (select Id from (select min(Id) Id from Person group by Email) temp);
+
+You can't specify target table for update in FROM clause: 不能够从一个表中select出一些东西之后在同一语句中马上修改这个表, 比如:
+delete from shishi where id not in (select min(id) id from shishi group by name);
+解决就是要多引入一次中间表(temp)即可:
+delete from shishi where id not in (select id from (select min(id) id from shishi group by name) temp);
