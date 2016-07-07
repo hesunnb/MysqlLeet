@@ -1,0 +1,1 @@
+select Email from (select Email,count(Email) number from Person group by Email) temp where number > 1;
