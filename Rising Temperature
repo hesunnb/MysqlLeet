@@ -1,0 +1,9 @@
+#select Id from Weather, (select Date, Temperature from Weather, (select date_add(Date, interval -1 day) yesterday from Weather) temp where Date = temp.yesterday) temp2 where (datediff(Weather.Date, temp2.Date) = 1) and Weather.Temperature > temp2.Temperature;
+#自己解法, 用了三个select
+
+#TO_DAYS(date) 
+#作用是给出一个日期date，返回一个天数(从公元0年的天数); 
+#select w1.Id from Weather w1, Weather w2 where w1.Temperature > w2.Temperature and (to_days(w1.Date) - to_days(w2.Date) = 1);
+
+#date_sub(date, 天数)
+select w1.Id from Weather w1, Weather w2 where date_sub(w1.Date, interval 1 day) = w2.Date and w1.Temperature > w2.Temperature;
