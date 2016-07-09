@@ -1,0 +1,2 @@
+select Name Customers from Customers where Id not in(select CustomerId from Orders);
+注意Customers要写在Name的后面表示列名的别名, 写在最后是起临时的表名, 不是列名
