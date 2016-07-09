@@ -1,0 +1,2 @@
+select ifnull((select distinct Salary from Employee order by Salary desc limit 1,1), null) SecondHighestSalary;
+重点在于比如有两个100的工资(100,100), 这时候还是没有第二大, 所以要select distinct之后再排序, 然后limit
