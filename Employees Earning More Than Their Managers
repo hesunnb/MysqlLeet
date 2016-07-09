@@ -1,0 +1,2 @@
+select worker.Name Employee from Employee worker, Employee boss where worker.ManagerId = boss.Id and worker.Salary > boss.Salary;
+一个自连接
