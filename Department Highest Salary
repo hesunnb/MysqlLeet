@@ -1,0 +1,6 @@
+# Write your MySQL query statement below
+# 这里的名字特别恶心, 注意每句都有别名, 然后在嵌套的子句中起了别名之后在主句中也要用别名, 但是where子句中还不能用别名, order by后面可以用别名
+
+select dn Department, en Employee, Salary from (select DepartmentId eid, Department.Name dn, Employee.Name en, Salary from Department, Employee where Department.Id = Employee.DepartmentId) temp1, 
+(select DepartmentId eid, max(Salary) ms from Employee group by DepartmentId) temp2 
+where temp1.eid = temp2.eid and temp1.Salary = temp2.ms;
