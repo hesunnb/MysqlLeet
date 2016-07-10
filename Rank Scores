@@ -1,0 +1,7 @@
+#Always count:
+#错误: select Score, (select count(distinct Score) from Scores where Score >= Scores.Score) Rank from Scores order by Score desc;
+#正确: 一定要给Scores起个别名, 因为Score >= Scores.Score 等价于Score >= Score, 所以条件就等同于没有加, 而给同一张表起别名就是另一张表了(和自连接一样), 所以加上别名之后才是-->每次从s.Score中取一个, 然后Scores中的所有Score有几个大于那个分数的, 记在rank中(正好与Scores中的Score相对应), 然后再一排序, rank就跟着Score移动了
+#select Score, (select count(distinct Score) from Scores where Score >= s.Score) Rank from Scores s order by Score desc;
+
+#Always count改进: 更容易理解一点, 先选出不同的分数组成temp表, 然后让temp表中的分数与原表中的分数进行比较, 查看有多少个
+select Scores.Score, (select count(*) from (select distinct Score from Scores) temp where temp.Score >= Scores.Score) Rank from Scores order by Scores.Score desc;
