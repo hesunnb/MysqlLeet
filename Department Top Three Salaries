@@ -1,0 +1,4 @@
+#这个是能够选出题目符合前三个的语句, count是表名, 如果想选出原表更多内容就是下面写的, 可以直接判断count(*)的结果, 里面的写法借鉴了rankscore那到题目
+#select Name, count from (select e.Name,(select count(distinct Salary) number from Employee where Salary >= e.Salary and DepartmentId = e.DepartmentId) count from Employee e) temp where count <= 3;
+
+select d.Name Department, e.Name Employee, Salary from Employee e, Department d where DepartmentId = d.Id and (select count(distinct Salary) from Employee where Salary >= e.Salary and DepartmentId = e.DepartmentId) <= 3 order by Department, Salary desc;
