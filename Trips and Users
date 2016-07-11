@@ -1,0 +1,14 @@
+# Write your MySQL query statement below
+select result1.Request_at Day, round((result2.count / result1.count), 2) 'Cancellation Rate' from (select Request_at, count(*) count from Trips, Users where (Trips.Client_Id=Users.Users_Id and Users.Role='client' and Users.Banned = 'No') group by Request_at) result1, (select Date.Request_at, ifnull(temp2.count, 0) count from (select distinct Request_at from Trips) Date left join (select Request_at, count(id) count from (select * from Trips, Users where (Trips.Client_Id=Users.Users_Id and Users.Role='client' and Users.Banned = 'No')) temp where Status = 'cancelled_by_client' or Status = 'cancelled_by_driver' group by Request_at) temp2 on Date.Request_at = temp2.Request_at) result2 where result1.Request_at = result2.Request_at and result1.Request_at >= '2013-10-01' and result1.Request_at <= '2013-10-03';
+
+
+
+#select Request_at, count(*) count from Trips, Users where (Trips.Client_Id=Users.Users_Id and Users.Role='client' and Users.Banned = 'No') group by Request_at; 这是第一句, 找出非banned的, 按日期分组的每一组的总数, 形成result1表
+
+#select * from Trips, Users where (Trips.Client_Id=Users.Users_Id and Users.Role='client' and Users.Banned = 'No')这个是第二句,选出非banned的人, 并且把两张表合并
+
+#select Request_at, count(id) count from (select * from Trips, Users where (Trips.Client_Id=Users.Users_Id and Users.Role='client' and Users.Banned = 'No')) temp where Status = 'cancelled_by_client' or Status = 'cancelled_by_driver' group by Request_at; 这是第三句, 在上一句的基础上按照日期分组, 选出每组里面是clients(包括client与driver)取消订单的数量
+
+#select Date.Request_at, ifnull(temp2.count, 0) count from (select distinct Request_at from Trips) Date left join (select Request_at, count(id) count from (select * from Trips, Users where (Trips.Client_Id=Users.Users_Id and Users.Role='client' and Users.Banned = 'No')) temp where Status = 'cancelled_by_client' or Status = 'cancelled_by_driver' group by Request_at) temp2 on Date.Request_at = temp2.Request_at; 这是第四句, 在上一句的基础上用left join把所有的日期加到左边, 右面是count的数量, 形成result2, 方便result1与result2进行运算
+
+#最后一步就是答案, 从result1和result2中选出要计算的rate并且要求在规定的日期内, 即完成条件
